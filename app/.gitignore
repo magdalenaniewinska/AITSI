@@ -1,0 +1,8 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+#Environment
+.DS_Store
+
+# pycharm
+.idea
