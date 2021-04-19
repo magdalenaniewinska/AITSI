@@ -14,14 +14,18 @@ def index():
 
 @app.route('/posts', methods=['GET', 'POST'])
 def posts():
-    all_posts = Post.query.order_by(Post.date_posted.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    all_posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template('posts.html', posts=all_posts)
 
-@app.route('/posts/user/<int:user_id>', methods=['GET', 'POST'])
-def user_posts(user_id):
-    user = User.query.get_or_404(user_id).order_by(Post.date_posted.desc())
-    user_posts = user.posts
-    return render_template('posts.html', posts=user_posts)
+@app.route('/user/<string:username>', methods=['GET', 'POST'])
+def user_posts(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author=user)\
+            .order_by(Post.date_posted.desc())\
+            .paginate(page=page, per_page=5)
+    return render_template('user_posts.html', posts=posts, user=user)
 
 @app.route('/posts/new', methods=['GET', 'POST'])
 @login_required
@@ -47,7 +51,7 @@ def add_comment(post_id, comment_id=-1):
         return redirect(url_for('post', post_id=post_id))
     return render_template('add_comment.html', form=form, legend='Nowy Komentarz', post_id=post_id, comment_id=comment_id)
 
-@app.route('/posts/<int:post_id>', methods=['GET', 'POST'])
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     all_comments = post.comments
