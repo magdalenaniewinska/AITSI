@@ -25,4 +25,5 @@ Wykorzystane technologie:
 - HTML
 
 ............................
+
 Z racji że wystawianie ocen trochę się przesunęło w czasie a mi flask się bardzo spodobał to pozwoliłam sobie na kontynuowanie tego projektu i rozwijanie go dalej (po deadlinie na złożenie projektu) 
